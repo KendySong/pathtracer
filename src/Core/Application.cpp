@@ -1,16 +1,13 @@
 #include "Application.hpp"
 
-Application::Application() : m_sandbox()
+Application::Application()
 {
 	m_fps = 0;
 	m_renderedFPS = 0;
 
 	SDL_Init(SDL_INIT_VIDEO);
-	p_window = SDL_CreateWindow("Physically based path tracer", Settings::width, Settings::height, SDL_WINDOW_RESIZABLE);
+	p_window = SDL_CreateWindow("Physically based path tracer", Settings::screen.x, Settings::screen.y, SDL_WINDOW_RESIZABLE);
 	p_renderer = SDL_CreateRenderer(p_window, nullptr);
-
-	m_sandbox.renderer = p_renderer;
-	m_sandbox.window = p_window;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -19,12 +16,16 @@ Application::Application() : m_sandbox()
 
 	ImGui_ImplSDL3_InitForSDLRenderer(p_window, p_renderer);
 	ImGui_ImplSDLRenderer3_Init(p_renderer);
+
+	SDL_SetRenderLogicalPresentation(p_renderer, Settings::resolution.x, Settings::resolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
 }
 
 void Application::run()
 {
 	bool run = true;
 	SDL_Event event;
+
+	Sandbox sandbox(p_window, p_renderer);
 
 	while (run)
 	{
@@ -38,20 +39,23 @@ void Application::run()
 		this->computeDeltaTime();
 		this->countFramerate();
 
-		m_sandbox.update(m_dt);
+		sandbox.update(m_dt);
 		
-		m_sandbox.clear();
-		m_sandbox.render();
+		//Render scene
+		SDL_SetRenderLogicalPresentation(p_renderer, Settings::resolution.x, Settings::resolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
+		sandbox.clear();
+		sandbox.draw();
+		sandbox.render();
 
+		//Render GUI
+		SDL_SetRenderLogicalPresentation(p_renderer, Settings::screen.x, Settings::screen.y, SDL_LOGICAL_PRESENTATION_DISABLED);
 		ImGui_ImplSDLRenderer3_NewFrame();
 		ImGui_ImplSDL3_NewFrame();
 		ImGui::NewFrame();
-
-		m_sandbox.gui(m_renderedFPS);
-
+		sandbox.gui(m_renderedFPS);
 		ImGui::Render();
-
 		ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), p_renderer);
+
 		SDL_RenderPresent(p_renderer);
 	}
 

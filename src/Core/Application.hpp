@@ -20,8 +20,6 @@ private :
 	void countFramerate();
 	void computeDeltaTime();
 
-	Sandbox m_sandbox;
-
 	SDL_Window* p_window;
 	SDL_Renderer* p_renderer;
 

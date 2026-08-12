@@ -8,11 +8,10 @@ class Settings
 public:
     static Settings instance;
 
-    static const int           seed;
-    static const std::uint32_t width;
-    static const std::uint32_t height;
-
+    static const int        seed;
+    static const glm::ivec2 screen;
     static       glm::ivec2 resolution;
+    static       float      aspectRatio;
 
 private:
     Settings();

@@ -9,15 +9,18 @@
 #include <glm/glm.hpp>
 
 #include "../Settings.hpp"
+#include "../Graphics/Color.hpp"
+#include "../Graphics/Framebuffer.hpp"
+#include "../Graphics/Ray.hpp"
 
 class Sandbox
 {
 public :
-	Sandbox();
 	Sandbox(SDL_Window* window, SDL_Renderer* renderer);
 	
 	void clear();
 	void update(float dt);
+	void draw();
 	void render();
 	void gui(int fps);
 
@@ -27,4 +30,5 @@ public :
 private :
 	glm::ivec2 m_showResolution;
 
+	FrameBuffer m_framebuffer;
 };
