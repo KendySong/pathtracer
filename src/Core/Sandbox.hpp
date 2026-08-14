@@ -12,6 +12,7 @@
 #include "../Graphics/Color.hpp"
 #include "../Graphics/Framebuffer.hpp"
 #include "../Graphics/Ray.hpp"
+#include "../Graphics/Viewport.hpp"
 
 class Sandbox
 {
@@ -28,7 +29,9 @@ public :
 	SDL_Renderer* renderer;
 
 private :
+	FrameBuffer m_framebuffer;
+
 	glm::ivec2 m_showResolution;
 
-	FrameBuffer m_framebuffer;
+	Viewport m_viewport;
 };

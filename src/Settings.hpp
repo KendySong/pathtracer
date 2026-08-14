@@ -10,7 +10,8 @@ public:
 
     static const int        seed;
     static const glm::ivec2 screen;
-    static       glm::ivec2 resolution;
+    static       glm::ivec2 iResolution;
+    static       glm::vec2  resolution;
     static       float      aspectRatio;
 
 private:

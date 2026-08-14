@@ -17,7 +17,7 @@ Application::Application()
 	ImGui_ImplSDL3_InitForSDLRenderer(p_window, p_renderer);
 	ImGui_ImplSDLRenderer3_Init(p_renderer);
 
-	SDL_SetRenderLogicalPresentation(p_renderer, Settings::resolution.x, Settings::resolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
+	SDL_SetRenderLogicalPresentation(p_renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
 }
 
 void Application::run()
@@ -42,7 +42,7 @@ void Application::run()
 		sandbox.update(m_dt);
 		
 		//Render scene
-		SDL_SetRenderLogicalPresentation(p_renderer, Settings::resolution.x, Settings::resolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
+		SDL_SetRenderLogicalPresentation(p_renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
 		sandbox.clear();
 		sandbox.draw();
 		sandbox.render();
