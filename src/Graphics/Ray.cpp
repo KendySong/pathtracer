@@ -10,7 +10,7 @@ Ray::Ray(glm::vec3 origin, glm::vec3 direction) : origin(origin), direction(dire
 
 }
 
-glm::vec3 Ray::at(float t)
+glm::vec3 Ray::at(float t) const
 {
 	return origin + t * direction;
 }

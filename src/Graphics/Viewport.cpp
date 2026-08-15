@@ -3,7 +3,6 @@
 Viewport::Viewport(float fov) : fov(fov)
 {
 	position		= glm::vec3(0);
-	direction		= glm::vec3(0, 0, -1);
 	m_focalDistance	= 1;
 
 	reset();
@@ -21,7 +20,7 @@ void Viewport::reset()
 	dx = u / Settings::resolution.x;
 	dy = v / Settings::resolution.y;
 
-	glm::vec3 startCorner = position - m_focalDistance * direction - (u / 2) - (v / 2);
+	glm::vec3 startCorner = position - glm::vec3(0, 0, m_focalDistance) - (u / 2) - (v / 2);
 	startPixel = startCorner + 0.5 * (dx + dy);
 }
 

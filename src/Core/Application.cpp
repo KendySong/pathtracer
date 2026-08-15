@@ -24,11 +24,7 @@ void Application::run()
 {
 	bool run = true;
 	SDL_Event event;
-
 	Sandbox sandbox(p_window, p_renderer);
-
-	
-
 
 	while (run)
 	{

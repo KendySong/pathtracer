@@ -6,14 +6,7 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->renderer = renderer;
 	this->m_showResolution = Settings::iResolution;
 
-
-
-
-
-
-
-
-	m_sphere = Sphere({0, 0, -5}, 2);
+	m_sphere = Sphere({ 0, 0, -2 }, 1);
 	m_sphere.color = { 1, 0, 0 };
 }
 
@@ -35,9 +28,7 @@ void Sandbox::draw()
 	{
 		for (size_t x = 0; x < Settings::iResolution.x; x++)
 		{
-			//glm::vec3 coord = glm::vec3(x / Settings::resolution.x, y / Settings::resolution.y, 0);
 			Ray ray = m_viewport.generate(x, y);
-
 			m_framebuffer.setPixel(x, y, Raytracer::trace(ray, m_sphere) * 255);
 		}
 	}
@@ -53,6 +44,10 @@ void Sandbox::gui(int fps)
 {
 	ImGui::Begin("Settings");
 		ImGui::Text("FPS : %i", fps);
+		if (ImGui::DragFloat3("Origin", &m_viewport.position.x))
+		{
+			m_viewport.reset();
+		}
 		ImGui::Separator();		
 		ImGui::SetNextItemWidth(100);
 		ImGui::InputInt2("Resolution", &m_showResolution.x);
@@ -71,7 +66,8 @@ void Sandbox::gui(int fps)
 		{
 			m_viewport.reset();
 		}
-		ImGui::DragFloat3("Position", &m_sphere.position.x, 0.05);
 
+		ImGui::DragFloat3("Position", &m_sphere.position.x, 0.05);
+		ImGui::DragFloat("Radius", &m_sphere.radius, 0.05);
 	ImGui::End();
 }

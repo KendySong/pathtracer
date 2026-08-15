@@ -17,8 +17,6 @@ public :
 	float fov;
 	
 	glm::vec3 position;
-	glm::vec3 direction;	//To implement future camera movement
-
 	glm::vec3 startPixel;
 
 private :
