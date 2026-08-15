@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
 
@@ -13,6 +15,8 @@
 #include "../Graphics/Framebuffer.hpp"
 #include "../Graphics/Ray.hpp"
 #include "../Graphics/Viewport.hpp"
+#include "../Graphics/Raytracer.hpp"
+#include "../Graphics/Sphere.hpp"
 
 class Sandbox
 {
@@ -29,9 +33,10 @@ public :
 	SDL_Renderer* renderer;
 
 private :
+	Viewport    m_viewport;
 	FrameBuffer m_framebuffer;
+	Sphere		m_sphere;
+
 
 	glm::ivec2 m_showResolution;
-
-	Viewport m_viewport;
 };

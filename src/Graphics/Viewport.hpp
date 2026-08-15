@@ -9,19 +9,18 @@ class Viewport
 {
 public :
 	Viewport(float fov);
-	void reset(float fov);
+	void reset();
 	Ray generate(int x, int y);
 
 	glm::vec3 dx;
 	glm::vec3 dy;
 	float fov;
-	float focalDistance;
-
+	
 	glm::vec3 position;
 	glm::vec3 direction;	//To implement future camera movement
 
 	glm::vec3 startPixel;
 
 private :
-
+	float m_focalDistance;
 };

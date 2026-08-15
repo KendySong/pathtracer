@@ -27,6 +27,9 @@ void Application::run()
 
 	Sandbox sandbox(p_window, p_renderer);
 
+	
+
+
 	while (run)
 	{
 		while (SDL_PollEvent(&event))

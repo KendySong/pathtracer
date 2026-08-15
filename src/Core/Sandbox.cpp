@@ -6,6 +6,15 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->renderer = renderer;
 	this->m_showResolution = Settings::iResolution;
 
+
+
+
+
+
+
+
+	m_sphere = Sphere({0, 0, -5}, 2);
+	m_sphere.color = { 1, 0, 0 };
 }
 
 void Sandbox::clear() 
@@ -26,12 +35,10 @@ void Sandbox::draw()
 	{
 		for (size_t x = 0; x < Settings::iResolution.x; x++)
 		{
-			glm::vec3 coord = glm::vec3(x / Settings::resolution.x, y / Settings::resolution.y, 0);
+			//glm::vec3 coord = glm::vec3(x / Settings::resolution.x, y / Settings::resolution.y, 0);
+			Ray ray = m_viewport.generate(x, y);
 
-			//Ray ray = m_viewport.generate(x, y);
-
-
-			m_framebuffer.setPixel(x, y, coord * 255.0f);
+			m_framebuffer.setPixel(x, y, Raytracer::trace(ray, m_sphere) * 255);
 		}
 	}
 }
@@ -53,10 +60,18 @@ void Sandbox::gui(int fps)
 		{
 			Settings::iResolution  = m_showResolution;
 			Settings::resolution   = m_showResolution;
-			Settings::aspectRatio  = m_showResolution.x / m_showResolution.y;
+			Settings::aspectRatio  = (float)m_showResolution.x / (float)m_showResolution.y;
+
 			SDL_SetRenderLogicalPresentation(renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
+			m_viewport.reset();
 			m_framebuffer.reset();
+		}	
+
+		if (ImGui::DragFloat("FOV", &m_viewport.fov, 0.1, 45, 180))
+		{
+			m_viewport.reset();
 		}
-		
+		ImGui::DragFloat3("Position", &m_sphere.position.x, 0.05);
+
 	ImGui::End();
 }
