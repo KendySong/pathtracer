@@ -1,5 +1,18 @@
 #include "Math.hpp"
 
+
+glm::vec3 Math::remapToUV(const glm::vec3 & v)
+{
+	//Remap interval from [-1;1] to [0;1]
+	return (v + glm::vec3(1)) / 2;
+}
+
+glm::vec3 Math::remapToNDC(const glm::vec3& v)
+{
+	//Remap interval from [0;1] to [-1;1]
+	return v * 2 - glm::vec3(1);
+}
+
 glm::vec3 operator/(const glm::vec3& v, int s)
 {
 	return v / (float)s;

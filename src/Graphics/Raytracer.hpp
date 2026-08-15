@@ -12,5 +12,5 @@ public :
 	static glm::vec3 trace(const Ray& ray, const Sphere& sphere);
 
 private :
-	static bool hit(const Ray& ray, const Sphere& sphere);
+	static float hit(const Ray& ray, const Sphere& sphere);
 };

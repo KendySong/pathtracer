@@ -6,7 +6,7 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->renderer = renderer;
 	this->m_showResolution = Settings::iResolution;
 
-	m_sphere = Sphere({ 0, 0, -2 }, 1);
+	m_sphere = Sphere({ 0, 0, -3 }, 1);
 	m_sphere.color = { 1, 0, 0 };
 }
 
