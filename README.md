@@ -10,4 +10,4 @@ Physically based path tracer running on CPU
 
 ## Path tracer design
 - normal points always against the ray
-- traced ray are not normalized
+- traced rays are normalized
