@@ -26,22 +26,21 @@ Sphere::Sphere(float radius) : Sphere(glm::vec3(0), radius)
 }
 
 bool Sphere::hit(const Ray& ray, HitContext& context) const
-{
+{	
 	glm::vec3 oc = this->position - ray.origin;
-
-	float a = glm::dot(ray.direction, ray.direction);
-	float b = -2 * glm::dot(ray.direction, oc);
-	float c = glm::dot(oc, oc) - this->radius * this->radius;
-
-	float discriminant = b * b - 4 * a * c;
+	
+	float a = 1;													//normally equal to glm::length2(ray.direction) but ray.direction is normalized
+	float h = glm::dot(ray.direction, oc);
+	float c = glm::length2(oc) - this->radius * this->radius;
+	float discriminant = h * h - a * c;
 
 	if (discriminant < 0)
 	{
 		return false;
 	}
 
-	float t1 = (-b - sqrt(discriminant)) / (2 * a);
-	float t2 = (-b + sqrt(discriminant)) / (2 * a);
+	float t1 = (h - sqrt(discriminant)) / a;
+	float t2 = (h + sqrt(discriminant)) / a;
 
 	if (t1 > 0)
 	{
@@ -51,7 +50,7 @@ bool Sphere::hit(const Ray& ray, HitContext& context) const
 	{
 		context.t = t2;
 	}
-	else 
+	else
 	{
 		return false;
 	}
