@@ -9,6 +9,9 @@ public :
     float t;
     glm::vec3 point;
     glm::vec3 normal;
+    bool frontFace;
+
+    void setFaceNormal(const Ray& ray, const glm::vec3& outNormal);
 };
 
 class Hittable

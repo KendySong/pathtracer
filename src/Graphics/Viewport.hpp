@@ -11,6 +11,7 @@ public :
 	Viewport(float fov);
 	void reset();
 	Ray generate(int x, int y);
+	Ray generateAA(int x, int y);
 
 	glm::vec3 dx;
 	glm::vec3 dy;

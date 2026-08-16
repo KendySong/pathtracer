@@ -35,8 +35,10 @@ public :
 private :
 	Viewport    m_viewport;
 	FrameBuffer m_framebuffer;
-	Sphere		m_sphere;
-
+	
+	std::vector<Hittable*> m_world;
+	Sphere m_sphere;
+	Sphere m_groundSphere;
 
 	glm::ivec2 m_showResolution;
 };

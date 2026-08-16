@@ -13,6 +13,9 @@ public:
     static       glm::ivec2 iResolution;
     static       glm::vec2  resolution;
     static       float      aspectRatio;
+    static       bool       antialiasing;
+    static       int        sampleAA;
+    static       bool       continiousRendering;
 
 private:
     Settings();

@@ -41,9 +41,12 @@ void Application::run()
 		sandbox.update(m_dt);
 		
 		//Render scene
-		SDL_SetRenderLogicalPresentation(p_renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
-		sandbox.clear();
-		sandbox.draw();
+		SDL_SetRenderLogicalPresentation(p_renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);	
+		if (Settings::continiousRendering)
+		{
+			sandbox.clear();
+			sandbox.draw();
+		}
 		sandbox.render();
 
 		//Render GUI

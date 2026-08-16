@@ -9,5 +9,5 @@
 class Raytracer
 {
 public :
-	static glm::vec3 trace(const Ray& ray, const Sphere& sphere);
+	static glm::vec3 trace(const Ray& ray, const std::vector<Hittable*>& world);
 };

@@ -10,7 +10,12 @@ Sphere::Sphere(glm::vec3 position) : Sphere(position, 1)
 	
 }
 
-Sphere::Sphere(glm::vec3 position, float radius) : position(position), radius(radius), color({ 1, 1, 1 })
+Sphere::Sphere(glm::vec3 position, float radius) : Sphere(position, radius, { 1, 1, 1 })
+{
+
+}
+
+Sphere::Sphere(glm::vec3 position, float radius, glm::vec3 color) : position(position), radius(radius), color(color)
 {
 
 }
@@ -52,6 +57,6 @@ bool Sphere::hit(const Ray& ray, HitContext& context) const
 	}
 
 	context.point = ray.at(context.t);
-	context.normal = (context.point - this->position) / this->radius;
+	context.setFaceNormal(ray, (context.point - this->position) / this->radius);
 	return true;
 }

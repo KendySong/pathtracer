@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-#include "Hitabble.hpp"
+#include "Hittable.hpp"
 
 class Sphere : public Hittable
 {
@@ -9,6 +9,7 @@ public :
     Sphere();
     Sphere(glm::vec3 position);
     Sphere(glm::vec3 position, float radius);
+    Sphere(glm::vec3 position, float radius, glm::vec3 color);
     Sphere(float radius);
 
     bool hit(const Ray& ray, HitContext& context) const override;
