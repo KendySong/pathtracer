@@ -62,7 +62,7 @@ void Sandbox::render()
 void Sandbox::gui(int fps)
 {
 	ImGui::Begin("Settings");
-		ImGui::Text("FPS				 : %i", fps);
+		ImGui::Text("FPS                 : %i", fps);
 		ImGui::Text("Last rendering time : %f ms", m_renderingTime);
 
 		//Graphics settings
