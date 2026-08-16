@@ -6,6 +6,9 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->renderer = renderer;
 	this->m_showResolution = Settings::iResolution;
 
+	m_renderingTimer.stop();
+	m_renderingTime = 0;
+
 	m_sphere = Sphere({ 0, 0, -3 }, 1, { 1, 0, 0 });
 	m_groundSphere = Sphere({ 0, -100.5, -1 }, 100, { 1, 1, 1 });
 
@@ -59,7 +62,8 @@ void Sandbox::render()
 void Sandbox::gui(int fps)
 {
 	ImGui::Begin("Settings");
-		ImGui::Text("FPS : %i", fps);
+		ImGui::Text("FPS				 : %i", fps);
+		ImGui::Text("Last rendering time : %f ms", m_renderingTime);
 
 		//Graphics settings
 		ImGui::SeparatorText("Graphics");
@@ -68,7 +72,10 @@ void Sandbox::gui(int fps)
 		{
 			if (ImGui::Button("Render scene"))
 			{
+				m_renderingTimer.start();
 				this->draw();
+				m_renderingTimer.stop();
+				m_renderingTime = m_renderingTimer.getElapsedTime() * 1000;
 			}
 		}
 		ImGui::Checkbox("Antialiasing", &Settings::antialiasing);
@@ -84,6 +91,7 @@ void Sandbox::gui(int fps)
 			SDL_SetRenderLogicalPresentation(renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
 			m_viewport.reset();
 			m_framebuffer.reset();
+			this->draw();
 		}	
 
 		//Camera settings

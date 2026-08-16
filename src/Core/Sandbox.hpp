@@ -10,6 +10,7 @@
 
 #include <glm/glm.hpp>
 
+#include "Timer.hpp"
 #include "../Settings.hpp"
 #include "../Graphics/Color.hpp"
 #include "../Graphics/Framebuffer.hpp"
@@ -41,4 +42,6 @@ private :
 	Sphere m_groundSphere;
 
 	glm::ivec2 m_showResolution;
+	Timer m_renderingTimer;
+	float m_renderingTime;
 };

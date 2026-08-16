@@ -12,7 +12,5 @@ glm::vec3 Raytracer::trace(const Ray& ray, const std::vector<Hittable*>& world)
 		}
 	}
 
-	
-
 	return glm::mix(glm::vec3(1, 1, 1), glm::vec3(0.5, 0.7, 1.0), (ray.direction.y + 1) / 2);
 }
