@@ -18,6 +18,7 @@ public:
     static       bool       continiousRendering;
     static       int        bounceLimit;
     static       float      minT;
+    static       bool       gammaCorrection;
 
 
 private:

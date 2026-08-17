@@ -37,21 +37,29 @@ void Sandbox::draw()
 	{
 		for (size_t x = 0; x < Settings::iResolution.x; x++)
 		{
+			//Compute pixel color between [0;1] foreach components
+			glm::vec3 pixelColor = glm::vec3(0);
 			if (Settings::antialiasing)
-			{
-				glm::vec3 pixelColor = glm::vec3(0);
+			{		
 				for (size_t i = 0; i < Settings::sampleAA; i++)
 				{
 					Ray ray = m_viewport.generateAA(x, y);
 					pixelColor += Raytracer::trace(ray, m_world, 0);
 				}
-				m_framebuffer.setPixel(x, y, (pixelColor / Settings::sampleAA) * 255);
+				pixelColor = (pixelColor / Settings::sampleAA);
 			}
 			else
 			{
 				Ray ray = m_viewport.generate(x, y);
-				m_framebuffer.setPixel(x, y, Raytracer::trace(ray, m_world, 0) * 255);
+				pixelColor = Raytracer::trace(ray, m_world, 0);				
 			}
+
+			if (Settings::gammaCorrection)
+			{
+				pixelColor = Math::linearToGamma2(pixelColor);
+			}
+
+			m_framebuffer.setPixel(x, y, pixelColor * 255);
 		}
 	}
 }
@@ -81,11 +89,15 @@ void Sandbox::gui(int fps)
 				m_renderingTime = m_renderingTimer.getElapsedTime() * 1000;
 			}
 		}
-		ImGui::Checkbox("Antialiasing", &Settings::antialiasing);
-		ImGui::DragInt("Sample per pixel", &Settings::sampleAA, 1, 1, 100);	
-		ImGui::DragInt("Bounce limit", &Settings::bounceLimit, 1, 1, 10);
-		ImGui::DragFloat("Minimum t", &Settings::minT, 0.01, 0, 1);
+		ImGui::Checkbox( "Gamma correction",	&Settings::gammaCorrection);
+		ImGui::Checkbox( "Antialiasing",		&Settings::antialiasing);
+		ImGui::DragInt(  "Sample per pixel",	&Settings::sampleAA, 1, 1, 100);	
+		ImGui::DragInt(  "Bounce limit",		&Settings::bounceLimit, 1, 1, 10);
+		ImGui::DragFloat("Minimum t",			&Settings::minT, 0.01, 0, 1);	
 		ImGui::SetNextItemWidth(100);
+
+
+
 		ImGui::InputInt2("Resolution", &m_showResolution.x);
 		if (ImGui::Button("Apply new resolution"))
 		{

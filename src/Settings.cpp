@@ -17,3 +17,4 @@ int					Settings::sampleAA				= 4;	// useless upper 25
 bool				Settings::continiousRendering	= true;
 int					Settings::bounceLimit			= 4;
 float				Settings::minT					= 0.01;
+bool				Settings::gammaCorrection		= false;

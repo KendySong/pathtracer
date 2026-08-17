@@ -41,9 +41,10 @@ glm::vec3 Math::clamp(const glm::vec3& v, float min, float max)
 	return { glm::clamp(v.x, min, max), glm::clamp(v.y, min, max) , glm::clamp(v.z, min, max) };
 }
 
-
-
-
+glm::vec3 Math::linearToGamma2(const glm::vec3& color)
+{
+	return { color.x > 0 ? sqrt(color.x) : 0, color.y > 0 ? sqrt(color.y) : 0, color.z > 0 ? sqrt(color.z) : 0 };
+}
 
 glm::vec3 operator/(const glm::vec3& v, int s)
 {
