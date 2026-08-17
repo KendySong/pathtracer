@@ -25,6 +25,16 @@ float Math::random(float min, float max)
 	return min + (max - min) * random();
 }
 
+glm::vec3 Math::randomv()
+{
+	return { Math::random(), Math::random(), Math::random() };
+}
+
+glm::vec3 Math::randomv(float min, float max)
+{
+	return { Math::random(min, max), Math::random(min, max), Math::random(min, max) };
+}
+
 
 glm::vec3 Math::clamp(const glm::vec3& v, float min, float max)
 {

@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/norm.hpp>
 
+#include "../Settings.hpp"
 #include "Hittable.hpp"
 
 class Sphere : public Hittable

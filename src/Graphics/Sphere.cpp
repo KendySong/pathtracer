@@ -42,11 +42,11 @@ bool Sphere::hit(const Ray& ray, HitContext& context) const
 	float t1 = (h - sqrt(discriminant)) / a;
 	float t2 = (h + sqrt(discriminant)) / a;
 
-	if (t1 > 0)
+	if (t1 > 0 && t1 > Settings::minT)
 	{
 		context.t = t1;
 	}
-	else if (t2 > 0)
+	else if (t2 > 0 && t2 > Settings::minT)
 	{
 		context.t = t2;
 	}

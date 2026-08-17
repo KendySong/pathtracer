@@ -9,8 +9,11 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_renderingTimer.stop();
 	m_renderingTime = 0;
 
-	m_sphere = Sphere({ 0, 0, -3 }, 1, { 1, 0, 0 });
-	m_groundSphere = Sphere({ 0, -100.5, -1 }, 100, { 1, 1, 1 });
+	m_viewport.position = { 0, 0, 5 };
+	m_viewport.reset();
+
+	m_sphere = Sphere({ 0, 0, 0 }, 1, { 1, 0, 0 });
+	m_groundSphere = Sphere({ 0, -101, 0 }, 100, { 1, 1, 1 });
 
 	m_world.push_back(&m_sphere);
 	m_world.push_back(&m_groundSphere);
@@ -40,14 +43,14 @@ void Sandbox::draw()
 				for (size_t i = 0; i < Settings::sampleAA; i++)
 				{
 					Ray ray = m_viewport.generateAA(x, y);
-					pixelColor += Raytracer::trace(ray, m_world);
+					pixelColor += Raytracer::trace(ray, m_world, 0);
 				}
 				m_framebuffer.setPixel(x, y, (pixelColor / Settings::sampleAA) * 255);
 			}
 			else
 			{
 				Ray ray = m_viewport.generate(x, y);
-				m_framebuffer.setPixel(x, y, Raytracer::trace(ray, m_world) * 255);
+				m_framebuffer.setPixel(x, y, Raytracer::trace(ray, m_world, 0) * 255);
 			}
 		}
 	}
@@ -80,6 +83,8 @@ void Sandbox::gui(int fps)
 		}
 		ImGui::Checkbox("Antialiasing", &Settings::antialiasing);
 		ImGui::DragInt("Sample per pixel", &Settings::sampleAA, 1, 1, 100);	
+		ImGui::DragInt("Bounce limit", &Settings::bounceLimit, 1, 1, 10);
+		ImGui::DragFloat("Minimum t", &Settings::minT, 0.01, 0, 1);
 		ImGui::SetNextItemWidth(100);
 		ImGui::InputInt2("Resolution", &m_showResolution.x);
 		if (ImGui::Button("Apply new resolution"))

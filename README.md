@@ -1,5 +1,5 @@
 # pb-pathtracer
-Physically based path tracer running on CPU
+Physically based path tracer running on CPU, made with Raytracing in one weekend
 
 ## Building
 ```git
@@ -11,3 +11,10 @@ Physically based path tracer running on CPU
 ## Path tracer design
 - normal points always against the ray
 - traced rays are normalized
+- materials are separated from hittable objects
+
+
+### Used libraries
+- SDL3
+- glm
+- ImGui

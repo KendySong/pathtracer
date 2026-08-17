@@ -14,6 +14,8 @@ public :
 
 	static float random();
 	static float random(float min, float max);
+	static glm::vec3 randomv();
+	static glm::vec3 randomv(float min, float max);
 
 	static glm::vec3 clamp(const glm::vec3& v, float min, float max);
 };

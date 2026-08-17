@@ -16,6 +16,9 @@ public:
     static       bool       antialiasing;
     static       int        sampleAA;
     static       bool       continiousRendering;
+    static       int        bounceLimit;
+    static       float      minT;
+
 
 private:
     Settings();

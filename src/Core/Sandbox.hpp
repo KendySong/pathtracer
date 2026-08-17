@@ -18,6 +18,7 @@
 #include "../Graphics/Viewport.hpp"
 #include "../Graphics/Raytracer.hpp"
 #include "../Graphics/Sphere.hpp"
+#include "../Graphics/Material.hpp"
 
 class Sandbox
 {
