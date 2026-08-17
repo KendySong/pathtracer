@@ -19,6 +19,7 @@
 #include "../Graphics/Raytracer.hpp"
 #include "../Graphics/Sphere.hpp"
 #include "../Graphics/Material.hpp"
+#include "../Graphics/Gui/Resolution.hpp"
 
 class Sandbox
 {
@@ -35,6 +36,8 @@ public :
 	SDL_Renderer* renderer;
 
 private :
+	void updateResolution();
+
 	Viewport    m_viewport;
 	FrameBuffer m_framebuffer;
 	
@@ -42,7 +45,9 @@ private :
 	Sphere m_sphere;
 	Sphere m_groundSphere;
 
+	//Settings
 	glm::ivec2 m_showResolution;
 	Timer m_renderingTimer;
 	float m_renderingTime;
+	int   m_resolutionIndex;
 };

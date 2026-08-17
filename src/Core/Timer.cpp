@@ -25,9 +25,13 @@ void Timer::stop() noexcept
 double Timer::getElapsedTime() noexcept
 {
 	if (m_isRunning)
+	{
 		m_elapsed = std::chrono::system_clock::now();
+	}
 	else
+	{
 		m_elapsed = m_stop;
+	}
 
-	return std::chrono::duration_cast<std::chrono::microseconds>(m_elapsed - m_start).count() * 0.000001;
+	return std::chrono::duration<double>(m_elapsed - m_start).count();
 }

@@ -2,9 +2,14 @@
 
 Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(renderer), m_viewport(90)
 {
-	this->window = window;
-	this->renderer = renderer;
-	this->m_showResolution = Settings::iResolution;
+	this->window	= window;
+	this->renderer	= renderer;
+	
+	this->m_resolutionIndex = 4;
+	Settings::iResolution	= Resolution::getFromIndex(m_resolutionIndex);
+	Settings::resolution	= Settings::iResolution;
+	this->m_showResolution	= Settings::iResolution;
+	this->updateResolution();
 
 	m_renderingTimer.stop();
 	m_renderingTime = 0;
@@ -12,8 +17,8 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_viewport.position = { 0, 0, 5 };
 	m_viewport.reset();
 
-	m_sphere = Sphere({ 0, 0, 0 }, 1, { 1, 0, 0 });
-	m_groundSphere = Sphere({ 0, -101, 0 }, 100, { 1, 1, 1 });
+	m_sphere		= Sphere({ 0, 0, 0 }, 1, { 1, 0, 0 });
+	m_groundSphere	= Sphere({ 0, -101, 0 }, 100, { 1, 1, 1 });
 
 	m_world.push_back(&m_sphere);
 	m_world.push_back(&m_groundSphere);
@@ -96,18 +101,28 @@ void Sandbox::gui(int fps)
 		ImGui::DragFloat("Minimum t",			&Settings::minT, 0.01, 0, 1);	
 		ImGui::SetNextItemWidth(100);
 
+		if (ImGui::BeginCombo("Resolutions", Resolution::format[m_resolutionIndex]))
+		{
+			for (size_t i = 0; i < Resolution::size; i++)
+			{
+				bool selected = i == m_resolutionIndex;
+				if (ImGui::Selectable(Resolution::format[i], selected))
+				{
+					m_resolutionIndex = i;
+					m_showResolution = Resolution::getFromIndex(i);
+				}
 
+				if (selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
 
-		ImGui::InputInt2("Resolution", &m_showResolution.x);
 		if (ImGui::Button("Apply new resolution"))
 		{
-			Settings::iResolution  = m_showResolution;
-			Settings::resolution   = m_showResolution;
-			Settings::aspectRatio  = (float)m_showResolution.x / (float)m_showResolution.y;
-
-			SDL_SetRenderLogicalPresentation(renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
-			m_viewport.reset();
-			m_framebuffer.reset();
+			this->updateResolution();
 			this->draw();
 		}	
 
@@ -131,4 +146,15 @@ void Sandbox::gui(int fps)
 		ImGui::DragFloat3("Ground position ", &m_groundSphere.position.x, 0.05);
 		ImGui::DragFloat("Ground radius", &m_groundSphere.radius, 0.05);
 	ImGui::End();
+}
+
+void Sandbox::updateResolution()
+{
+	Settings::iResolution = m_showResolution;
+	Settings::resolution = m_showResolution;
+	Settings::aspectRatio = (float)m_showResolution.x / (float)m_showResolution.y;
+
+	SDL_SetRenderLogicalPresentation(renderer, Settings::iResolution.x, Settings::iResolution.y, SDL_LOGICAL_PRESENTATION_STRETCH);
+	m_viewport.reset();
+	m_framebuffer.reset();
 }
