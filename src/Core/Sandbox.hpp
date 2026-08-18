@@ -19,7 +19,9 @@
 #include "../Graphics/Raytracer.hpp"
 #include "../Graphics/Sphere.hpp"
 #include "../Graphics/Material.hpp"
+
 #include "../Graphics/Gui/Resolution.hpp"
+#include "../Graphics/Gui/Sample.hpp"
 
 class Sandbox
 {
@@ -57,5 +59,7 @@ private :
 	glm::ivec2 m_showResolution;
 	Timer m_renderingTimer;
 	float m_renderingTime;
+
 	int   m_resolutionIndex;
+	int   m_sampleIndex;
 };

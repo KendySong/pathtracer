@@ -2,8 +2,9 @@
 
 Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(renderer), m_viewport(90)
 {
-	this->window	= window;
-	this->renderer	= renderer;
+	this->window		= window;
+	this->renderer		= renderer;
+	this->m_sampleIndex = 7;
 
 	m_renderingTimer.stop();
 	m_renderingTime = 0;
@@ -22,7 +23,7 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_mGround = Lambertian({ 0.8, 0.8, 0.0 });
 	m_mCenter = Lambertian({ 0.1, 0.2, 0.5 });
 	m_mLeft   = Metal({ 0.8, 0.8, 0.8 }, 0.3);
-	m_mRight  = Dieletric(1.5f);
+	m_mRight  = Dieletric(1.0 / 1.33);
 
 	m_groundSphere  = Sphere({ 0, -100.5, -1 },  100,  &m_mGround);
 	m_centerSphere  = Sphere({ 0, 0.0, -1.2 },  0.5,   &m_mCenter);
@@ -107,7 +108,27 @@ void Sandbox::gui(int fps)
 		}
 		ImGui::Checkbox( "Gamma correction",	&Settings::gammaCorrection);
 		ImGui::Checkbox( "Antialiasing",		&Settings::antialiasing);
-		ImGui::DragInt(  "Sample per pixel",	&Settings::sampleAA, 1, 1, 100);	
+
+
+		if (ImGui::BeginCombo("Sample per pixel", Sample::quantity[m_sampleIndex]))
+		{
+			for (size_t i = 0; i < Sample::size; i++)
+			{
+				bool selected = i == m_sampleIndex;
+				if (ImGui::Selectable(Sample::quantity[i], selected))
+				{
+					m_sampleIndex = i;
+					Settings::sampleAA = std::stoi(Sample::quantity[i]);
+				}
+
+				if (selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
 		ImGui::DragInt(  "Bounce limit",		&Settings::bounceLimit, 1, 1, 10);
 		ImGui::DragFloat("Minimum t",			&Settings::minT, 0.01, 0, 1);	
 		ImGui::SetNextItemWidth(100);
@@ -144,7 +165,7 @@ void Sandbox::gui(int fps)
 			m_viewport.reset();
 		}
 
-		if (ImGui::DragFloat3("Origin", &m_viewport.position.x))
+		if (ImGui::DragFloat3("Origin", &m_viewport.position.x, 0.01))
 		{
 			m_viewport.reset();
 		}
