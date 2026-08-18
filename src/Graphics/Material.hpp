@@ -31,9 +31,21 @@ class Metal : public Material
 {
 public:
 	Metal() = default;
-	Metal(const glm::vec3& albedo);
+	Metal(const glm::vec3& albedo, float fuzz = 0);
 
 	bool scatter(const Ray& ray, const HitContext& context, glm::vec3& attenuation, Ray& scattered) const override;
 
 	glm::vec3 albedo;
+	float fuzz;
+}; 
+
+class Dieletric : public Material
+{
+public :
+	Dieletric() = default;
+	Dieletric(float refractionIndex);
+
+	bool scatter(const Ray& ray, const HitContext& context, glm::vec3& attenuation, Ray& scattered) const override;
+
+	float refractionIndex;
 };

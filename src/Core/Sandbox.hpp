@@ -46,7 +46,7 @@ private :
 	Lambertian	m_mGround;
 	Lambertian	m_mCenter;
 	Metal		m_mLeft;
-	Metal		m_mRight;
+	Dieletric	m_mRight;
 
 	Sphere m_groundSphere;
 	Sphere m_centerSphere;

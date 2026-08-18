@@ -15,14 +15,14 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->m_showResolution	= Settings::iResolution;
 	this->updateResolution();
 
-	m_viewport.position = { 0, 0, 5 };
+	m_viewport.position = { 0, 0, 1 };
 	m_viewport.reset();
 	
 	//Materials and world
 	m_mGround = Lambertian({ 0.8, 0.8, 0.0 });
 	m_mCenter = Lambertian({ 0.1, 0.2, 0.5 });
-	m_mLeft   = Metal({ 0.8, 0.8, 0.8 });
-	m_mRight  = Metal({ 0.8, 0.6, 0.2 });
+	m_mLeft   = Metal({ 0.8, 0.8, 0.8 }, 0.3);
+	m_mRight  = Dieletric(1.5f);
 
 	m_groundSphere  = Sphere({ 0, -100.5, -1 },  100,  &m_mGround);
 	m_centerSphere  = Sphere({ 0, 0.0, -1.2 },  0.5,   &m_mCenter);
@@ -153,6 +153,14 @@ void Sandbox::gui(int fps)
 		ImGui::SeparatorText("World");
 		ImGui::DragFloat3("1", &m_leftSphere.position.x,  0.01);
 		ImGui::DragFloat3("2", &m_rightSphere.position.x, 0.01);
+
+		if (ImGui::TreeNode("Materials"))
+		{
+			ImGui::DragFloat3("Metallic left", &m_mLeft.albedo.x, 0.01, 0, 1);
+			ImGui::DragFloat("Fuzz left", &m_mLeft.fuzz, 0.01, 0, 10);
+			ImGui::DragFloat("Refraction index", &m_mRight.refractionIndex, 0.01, 0.0, 3);
+			ImGui::TreePop();
+		}
 	ImGui::End();
 }
 
