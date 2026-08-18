@@ -46,14 +46,18 @@ private :
 	std::vector<Hittable*> m_world;
 
 	Lambertian	m_mGround;
-	Lambertian	m_mCenter;
-	Metal		m_mLeft;
-	Dieletric	m_mRight;
+	Lambertian	m_mBlueOne;
+	Metal		m_mMirror;
+	Dieletric	m_mAirBubble;
+	Dieletric   m_mHollowOut;
+	Dieletric   m_mHollowIn;
 
-	Sphere m_groundSphere;
-	Sphere m_centerSphere;
-	Sphere m_leftSphere;
-	Sphere m_rightSphere;
+	Sphere m_ground;
+	Sphere m_blueOne;
+	Sphere m_mirror;
+	Sphere m_airBubble;
+	Sphere m_hollowOut;
+	Sphere m_hollowIn;
 
 	//Settings
 	glm::ivec2 m_showResolution;

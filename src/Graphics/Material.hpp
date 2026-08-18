@@ -46,6 +46,7 @@ public :
 	Dieletric(float refractionIndex);
 
 	bool scatter(const Ray& ray, const HitContext& context, glm::vec3& attenuation, Ray& scattered) const override;
+	static float reflectance(float cos, float refractionRatio);
 
 	float refractionIndex;
 };

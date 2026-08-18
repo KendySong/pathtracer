@@ -49,9 +49,9 @@ Dieletric::Dieletric(float refractionIndex) : refractionIndex(refractionIndex)
 
 bool Dieletric::scatter(const Ray& ray, const HitContext& context, glm::vec3& attenuation, Ray& scattered) const
 {
-	float refractionRatio = context.frontFace ? 1.0f / refractionIndex : refractionIndex;
-	float cosTheta		  = std::min(glm::dot(-ray.direction, context.normal), 1.0f);
-	bool  canRefract	  = refractionRatio * sqrt(1 - cosTheta * cosTheta) < 1.0;
+	float refractionRatio	= context.frontFace ? 1.0f / refractionIndex : refractionIndex;
+	float cosTheta			= std::min(glm::dot(-ray.direction, context.normal), 1.0f);
+	bool  canRefract		= refractionRatio * sqrt(1 - cosTheta * cosTheta) < 1.0;
 
 	glm::vec3 direction;
 	if (canRefract)
@@ -66,4 +66,13 @@ bool Dieletric::scatter(const Ray& ray, const HitContext& context, glm::vec3& at
 	scattered   = Ray(context.point, direction);
 	attenuation = glm::vec3(1.0f);
 	return true;
+}
+
+float Dieletric::reflectance(float cos, float refractionRatio)
+{
+	//https://en.wikipedia.org/wiki/Schlick%27s_approximation
+	float r0 = (1 - refractionRatio) / (1 + refractionRatio);
+	r0 = r0 * r0;
+
+	return r0 + (1 - r0) * pow((1 - cos), 5);
 }
