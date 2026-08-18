@@ -19,6 +19,8 @@ public :
 
 	static glm::vec3 clamp(const glm::vec3& v, float min, float max);
 	static glm::vec3 linearToGamma2(const glm::vec3& color);
+
+	static bool nearZero(const glm::vec3& v);
 };
 
 glm::vec3 operator/(const glm::vec3& v, int s);

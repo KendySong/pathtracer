@@ -3,6 +3,8 @@
 
 #include "Ray.hpp"
 
+class Material;
+
 struct HitContext
 {
 public :
@@ -10,6 +12,7 @@ public :
     glm::vec3 point;
     glm::vec3 normal;
     bool frontFace;
+    Material* material;
 
     void setFaceNormal(const Ray& ray, const glm::vec3& outNormal);
 };

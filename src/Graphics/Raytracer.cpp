@@ -27,8 +27,16 @@ glm::vec3 Raytracer::trace(const Ray& ray, const std::vector<Hittable*>& world, 
 
 	if (hitAnything)
 	{	
-		glm::vec3 direction = nearestContext.normal + glm::sphericalRand(1.0f);
-		return 0.5 * Raytracer::trace(Ray(nearestContext.point, glm::normalize(direction)), world, depth+1);
+		Ray scattered;
+		glm::vec3 attenuation;
+		if (nearestContext.material->scatter(ray, nearestContext, attenuation, scattered))
+		{
+			return attenuation * Raytracer::trace(scattered, world, depth+1);
+		}
+		else
+		{
+			return { 0, 0, 0 };
+		}
 	}
 	
 	return glm::mix(glm::vec3(1, 1, 1), glm::vec3(0.5, 0.7, 1.0), (ray.direction.y + 1) / 2);

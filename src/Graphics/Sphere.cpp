@@ -1,26 +1,21 @@
 #include "Sphere.hpp"
 
-Sphere::Sphere() : Sphere(glm::vec3(0), 1)
-{
-
-}
-
-Sphere::Sphere(glm::vec3 position) : Sphere(position, 1)
+Sphere::Sphere(Material* material) : Sphere(glm::vec3(0), 1, material)
 {
 	
 }
 
-Sphere::Sphere(glm::vec3 position, float radius) : Sphere(position, radius, { 1, 1, 1 })
+Sphere::Sphere(glm::vec3 position, Material* material) : Sphere(position, 1, material)
+{
+	
+}
+
+Sphere::Sphere(glm::vec3 position, float radius, Material* material) : position(position), radius(radius), material(material)
 {
 
 }
 
-Sphere::Sphere(glm::vec3 position, float radius, glm::vec3 color) : position(position), radius(radius), color(color)
-{
-
-}
-
-Sphere::Sphere(float radius) : Sphere(glm::vec3(0), radius)
+Sphere::Sphere(float radius, Material* material) : Sphere(glm::vec3(0), radius, material)
 {
 
 }
@@ -57,5 +52,6 @@ bool Sphere::hit(const Ray& ray, HitContext& context) const
 
 	context.point = ray.at(context.t);
 	context.setFaceNormal(ray, (context.point - this->position) / this->radius);
+	context.material = material;
 	return true;
 }

@@ -35,7 +35,6 @@ glm::vec3 Math::randomv(float min, float max)
 	return { Math::random(min, max), Math::random(min, max), Math::random(min, max) };
 }
 
-
 glm::vec3 Math::clamp(const glm::vec3& v, float min, float max)
 {
 	return { glm::clamp(v.x, min, max), glm::clamp(v.y, min, max) , glm::clamp(v.z, min, max) };
@@ -44,6 +43,11 @@ glm::vec3 Math::clamp(const glm::vec3& v, float min, float max)
 glm::vec3 Math::linearToGamma2(const glm::vec3& color)
 {
 	return { color.x > 0 ? sqrt(color.x) : 0, color.y > 0 ? sqrt(color.y) : 0, color.z > 0 ? sqrt(color.z) : 0 };
+}
+
+bool Math::nearZero(const glm::vec3& v)
+{
+	return (abs(v.x) < 1e-8) && (abs(v.y) < 1e-8) && (abs(v.z) < 1e-8);
 }
 
 glm::vec3 operator/(const glm::vec3& v, int s)

@@ -1,4 +1,4 @@
-#include "Hittabble.hpp"
+#include "Hittable.hpp"
 
 void HitContext::setFaceNormal(const Ray& ray, const glm::vec3& outNormal)
 {

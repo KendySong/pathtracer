@@ -42,8 +42,16 @@ private :
 	FrameBuffer m_framebuffer;
 	
 	std::vector<Hittable*> m_world;
-	Sphere m_sphere;
+
+	Lambertian	m_mGround;
+	Lambertian	m_mCenter;
+	Metal		m_mLeft;
+	Metal		m_mRight;
+
 	Sphere m_groundSphere;
+	Sphere m_centerSphere;
+	Sphere m_leftSphere;
+	Sphere m_rightSphere;
 
 	//Settings
 	glm::ivec2 m_showResolution;

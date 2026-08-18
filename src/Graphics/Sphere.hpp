@@ -6,19 +6,20 @@
 
 #include "../Settings.hpp"
 #include "Hittable.hpp"
+#include "Material.hpp"
 
 class Sphere : public Hittable
 {
 public :
-    Sphere();
-    Sphere(glm::vec3 position);
-    Sphere(glm::vec3 position, float radius);
-    Sphere(glm::vec3 position, float radius, glm::vec3 color);
-    Sphere(float radius);
+    Sphere() = default;
+    Sphere(Material* material);
+    Sphere(glm::vec3 position, Material* material);
+    Sphere(glm::vec3 position, float radius, Material* material);
+    Sphere(float radius, Material* material);
 
     bool hit(const Ray& ray, HitContext& context) const override;
 
     glm::vec3 position;
-    glm::vec3 color;
     float radius;
+    Material* material;
 };

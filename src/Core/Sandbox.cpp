@@ -4,24 +4,35 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 {
 	this->window	= window;
 	this->renderer	= renderer;
+
+	m_renderingTimer.stop();
+	m_renderingTime = 0;
 	
+	//Resolution and viewport
 	this->m_resolutionIndex = 4;
 	Settings::iResolution	= Resolution::getFromIndex(m_resolutionIndex);
 	Settings::resolution	= Settings::iResolution;
 	this->m_showResolution	= Settings::iResolution;
 	this->updateResolution();
 
-	m_renderingTimer.stop();
-	m_renderingTime = 0;
-
 	m_viewport.position = { 0, 0, 5 };
 	m_viewport.reset();
+	
+	//Materials and world
+	m_mGround = Lambertian({ 0.8, 0.8, 0.0 });
+	m_mCenter = Lambertian({ 0.1, 0.2, 0.5 });
+	m_mLeft   = Metal({ 0.8, 0.8, 0.8 });
+	m_mRight  = Metal({ 0.8, 0.6, 0.2 });
 
-	m_sphere		= Sphere({ 0, 0, 0 }, 1, { 1, 0, 0 });
-	m_groundSphere	= Sphere({ 0, -101, 0 }, 100, { 1, 1, 1 });
+	m_groundSphere  = Sphere({ 0, -100.5, -1 },  100,  &m_mGround);
+	m_centerSphere  = Sphere({ 0, 0.0, -1.2 },  0.5,   &m_mCenter);
+	m_leftSphere	= Sphere({ -1.0, 0.0, -1.0 }, 0.5, &m_mLeft);
+	m_rightSphere	= Sphere({ 1.0, 0.0, -1.0 }, 0.5,  &m_mRight);
 
-	m_world.push_back(&m_sphere);
 	m_world.push_back(&m_groundSphere);
+	m_world.push_back(&m_centerSphere);
+	m_world.push_back(&m_leftSphere);
+	m_world.push_back(&m_rightSphere);
 }
 
 void Sandbox::clear() 
@@ -140,11 +151,8 @@ void Sandbox::gui(int fps)
 
 		//World settings
 		ImGui::SeparatorText("World");
-		ImGui::DragFloat3("Main sphere position", &m_sphere.position.x, 0.05);
-		ImGui::DragFloat("Main sphere radius", &m_sphere.radius, 0.05);
-
-		ImGui::DragFloat3("Ground position ", &m_groundSphere.position.x, 0.05);
-		ImGui::DragFloat("Ground radius", &m_groundSphere.radius, 0.05);
+		ImGui::DragFloat3("1", &m_leftSphere.position.x,  0.01);
+		ImGui::DragFloat3("2", &m_rightSphere.position.x, 0.01);
 	ImGui::End();
 }
 
