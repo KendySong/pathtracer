@@ -14,7 +14,6 @@ Physically based path tracer running on CPU, made with
 - traced rays are normalized
 - materials are separated from hittable objects
 
-
 ### Used libraries
 - SDL3
 - glm

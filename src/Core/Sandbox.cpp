@@ -10,15 +10,17 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_renderingTime = 0;
 	
 	//Resolution and viewport
-	this->m_resolutionIndex = 5;
+	this->m_resolutionIndex = 4;
 	Settings::iResolution	= Resolution::getFromIndex(m_resolutionIndex);
 	Settings::resolution	= Settings::iResolution;
 	this->m_showResolution	= Settings::iResolution;
 	this->updateResolution();
 
+	/*
 	m_viewport.position = { 0, 0,  0.29 };
 	m_viewport.lookAt   = { 0, 0, -1 };
 	m_viewport.reset();
+	
 	
 	//Materials and world
 	m_mGround		= Lambertian({ 0.8, 0.8, 0.0 });
@@ -41,6 +43,70 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_world.push_back(&m_airBubble);
 	m_world.push_back(&m_hollowOut);
 	m_world.push_back(&m_hollowIn);
+	*/
+
+	m_viewport.position = { 13, 2,  3 };
+	m_viewport.lookAt = { 0, 0, 0 };
+	m_viewport.fov = 20;
+	m_viewport.reset();
+
+	Lambertian* groundm = new Lambertian({ 0.5, 0.5, 0.5 });
+	Sphere* ground = new Sphere({ 0, -1000, 0 }, 1000, groundm);
+	m_world.push_back(ground);
+
+	for (int a = -11; a < 11; a++)
+	{
+		for (int b = -11; b < 11; b++)
+		{
+			float chooseMat = Math::random();
+			glm::vec3 center(a + 0.9 * Math::random(), 0.2, b + 0.9 * Math::random());
+
+			if ((center - glm::vec3(4, 0.2, 0)).length() > 0.9)
+			{
+				Material* material;
+				if (chooseMat < 0.8)
+				{
+					//Diffuse
+					glm::vec3 albedo = Math::randomv() * Math::randomv();
+					material = new Lambertian(albedo);
+					Sphere* sphere = new Sphere(center, 0.2, material);
+					m_world.push_back(sphere);
+				}
+				else if (chooseMat < 0.95) 
+				{
+					//Metal
+					glm::vec3 albedo = Math::randomv(0.5, 1.0);
+					float fuzz = Math::random(0.0, 0.5);
+					material = new Metal(albedo, fuzz);
+					Sphere* sphere = new Sphere(center, 0.2, material);
+					m_world.push_back(sphere);
+				}
+				else 
+				{
+					//Glass
+					material = new Dieletric(1.5);
+					Sphere* sphere = new Sphere(center, 0.2, material);
+					m_world.push_back(sphere);
+				}
+			}
+		}
+	}
+
+	Material* mat11 = new Dieletric(1.5);
+	Sphere* sphere11 = new Sphere({0, 1, 0}, 1.0, mat11);
+	m_world.push_back(sphere11);
+
+	Material* mat12 = new Lambertian({ 0.4, 0.2, 0.1 });
+	Sphere* sphere12 = new Sphere({ -4, 1, 0 }, 1.0, mat12);
+	m_world.push_back(sphere12);
+
+	Material* mat13 = new Metal({ 0.7, 0.6, 0.5 }, 0.0);
+	Sphere* sphere13 = new Sphere({ 4, 1, 0 }, 1.0, mat13);
+	m_world.push_back(sphere13);
+	
+	m_world.push_back(sphere11);
+
+
 }
 
 void Sandbox::clear() 
@@ -136,7 +202,7 @@ void Sandbox::gui(int fps)
 			ImGui::EndCombo();
 		}
 
-		ImGui::DragInt(  "Bounce limit",		&Settings::bounceLimit, 1, 1, 20);
+		ImGui::DragInt(  "Bounce limit",		&Settings::bounceLimit, 1, 1, 50);
 		ImGui::DragFloat("Minimum t",			&Settings::minT, 0.01, 0, 1);	
 		ImGui::SetNextItemWidth(100);
 
@@ -182,6 +248,7 @@ void Sandbox::gui(int fps)
 			m_viewport.reset();
 		}
 
+		/*
 		//World settings
 		ImGui::SeparatorText("World");
 		ImGui::DragFloat3("1", &m_mirror.position.x,  0.01);
@@ -194,6 +261,7 @@ void Sandbox::gui(int fps)
 			ImGui::DragFloat("Refraction index", &m_mAirBubble.refractionIndex, 0.01, 0.0, 3);
 			ImGui::TreePop();
 		}
+		*/
 	ImGui::End();
 }
 
