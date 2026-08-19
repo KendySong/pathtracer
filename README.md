@@ -1,4 +1,4 @@
-# pb-pathtracer
+# pathtracer
 Physically based path tracer running on CPU, made with
 [_Ray Tracing in One Weekend_](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
 
