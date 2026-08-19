@@ -16,35 +16,8 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->m_showResolution	= Settings::iResolution;
 	this->updateResolution();
 
+
 	/*
-	m_viewport.position = { 0, 0,  0.29 };
-	m_viewport.lookAt   = { 0, 0, -1 };
-	m_viewport.reset();
-	
-	
-	//Materials and world
-	m_mGround		= Lambertian({ 0.8, 0.8, 0.0 });
-	m_mBlueOne		= Lambertian({ 0.1, 0.2, 0.5 });
-	m_mMirror		= Metal({ 0.8, 0.8, 0.8 }, 0.3);
-	m_mAirBubble	= Dieletric(1.5);
-	m_mHollowOut	= Dieletric(1.5);
-	m_mHollowIn		= Dieletric(1.0 / 1.5);
-
-	m_ground	= Sphere({ 0, -100.5, -1 },   100, &m_mGround);
-	m_blueOne	= Sphere({ 0, 0.0, -1.2 },    0.5, &m_mBlueOne);
-	m_mirror	= Sphere({ 0.48, 0.9, -1.0 }, 0.5, &m_mMirror);
-	m_airBubble	= Sphere({ 1.0, 0.0, -1.0 },  0.5, &m_mAirBubble);
-	m_hollowOut = Sphere({ -1.0, 0.0, -1.0 }, 0.5, &m_mHollowOut);
-	m_hollowIn  = Sphere({ -1.0, 0.0, -1.0 }, 0.4, &m_mHollowIn);
-
-	m_world.push_back(&m_ground);
-	m_world.push_back(&m_blueOne);
-	m_world.push_back(&m_mirror);
-	m_world.push_back(&m_airBubble);
-	m_world.push_back(&m_hollowOut);
-	m_world.push_back(&m_hollowIn);
-	*/
-
 	m_viewport.position = { 13, 2,  3 };
 	m_viewport.lookAt = { 0, 0, 0 };
 	m_viewport.fov = 20;
@@ -54,9 +27,9 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	Sphere* ground = new Sphere({ 0, -1000, 0 }, 1000, groundm);
 	m_world.push_back(ground);
 
-	for (int a = -11; a < 11; a++)
+	for (int a = -5; a < 5; a++)
 	{
-		for (int b = -11; b < 11; b++)
+		for (int b = -5; b < 5; b++)
 		{
 			float chooseMat = Math::random();
 			glm::vec3 center(a + 0.9 * Math::random(), 0.2, b + 0.9 * Math::random());
@@ -105,8 +78,34 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_world.push_back(sphere13);
 	
 	m_world.push_back(sphere11);
+	*/
+
+	m_viewport.position = { 0, 0,  0.29 };
+	m_viewport.lookAt = { 0, 0, -1 };
+	m_viewport.reset();
 
 
+	//Materials and world
+	m_mGround = Lambertian({ 0.8, 0.8, 0.0 });
+	m_mBlueOne = Lambertian({ 0.1, 0.2, 0.5 });
+	m_mMirror = Metal({ 0.8, 0.8, 0.8 }, 0.3);
+	m_mAirBubble = Dieletric(1.5);
+	m_mHollowOut = Dieletric(1.5);
+	m_mHollowIn = Dieletric(1.0 / 1.5);
+
+	m_ground = Sphere({ 0, -100.5, -1 }, 100, &m_mGround);
+	m_blueOne = Sphere({ 0, 0.0, -1.2 }, 0.5, &m_mBlueOne);
+	m_mirror = Sphere({ 0.48, 0.9, -1.0 }, 0.5, &m_mMirror);
+	m_airBubble = Sphere({ 1.0, 0.0, -1.0 }, 0.5, &m_mAirBubble);
+	m_hollowOut = Sphere({ -1.0, 0.0, -1.0 }, 0.5, &m_mHollowOut);
+	m_hollowIn = Sphere({ -1.0, 0.0, -1.0 }, 0.4, &m_mHollowIn);
+
+	m_world.push_back(&m_ground);
+	m_world.push_back(&m_blueOne);
+	m_world.push_back(&m_mirror);
+	m_world.push_back(&m_airBubble);
+	m_world.push_back(&m_hollowOut);
+	m_world.push_back(&m_hollowIn);
 }
 
 void Sandbox::clear() 
@@ -118,40 +117,62 @@ void Sandbox::clear()
 
 void Sandbox::update(float dt)
 {
-	
+
 }
 
 void Sandbox::draw()
 {
-	for (size_t y = 0; y < Settings::iResolution.y; y++)
+	if (Settings::pathTracing)
 	{
-		for (size_t x = 0; x < Settings::iResolution.x; x++)
+		m_framebuffer.sampleCount++;
+		for (size_t y = 0; y < Settings::iResolution.y; y++)
 		{
-			//Compute pixel color between [0;1] foreach components
-			glm::vec3 pixelColor = glm::vec3(0);
-			if (Settings::antialiasing)
-			{		
-				for (size_t i = 0; i < Settings::sampleAA; i++)
+			for (size_t x = 0; x < Settings::iResolution.x; x++)
+			{
+				//Compute pixel color between [0;1] foreach components
+				Ray ray = m_viewport.generateAA(x, y);
+				glm::vec3 sample = Raytracer::trace(ray, m_world, 0);
+				m_framebuffer.addAccumulation(x, y, sample);
+
+				glm::vec3 pixelColor = m_framebuffer.getAccumulation(x, y) / (float)m_framebuffer.sampleCount;	
+				pixelColor = Math::clamp(pixelColor, 0, 1);
+				pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
+
+				m_framebuffer.setPixel(x, y, pixelColor * 255);
+			}
+		}	
+		
+	}
+	else
+	{
+		for (size_t y = 0; y < Settings::iResolution.y; y++)
+		{
+			for (size_t x = 0; x < Settings::iResolution.x; x++)
+			{
+				//Compute pixel color between [0;1] foreach components
+				glm::vec3 pixelColor = glm::vec3(0);
+				if (Settings::antialiasing)
 				{
-					Ray ray = m_viewport.generateAA(x, y);
-					pixelColor += Raytracer::trace(ray, m_world, 0);
+					for (size_t i = 0; i < Settings::sampleAA; i++)
+					{
+						Ray ray = m_viewport.generateAA(x, y);
+						pixelColor += Raytracer::trace(ray, m_world, 0);
+					}
+
+					pixelColor = (pixelColor / Settings::sampleAA);
 				}
-				pixelColor = (pixelColor / Settings::sampleAA);
-			}
-			else
-			{
-				Ray ray = m_viewport.generate(x, y);
-				pixelColor = Raytracer::trace(ray, m_world, 0);				
-			}
+				else
+				{
+					Ray ray = m_viewport.generate(x, y);
+					pixelColor = Raytracer::trace(ray, m_world, 0);
+				}
 
-			if (Settings::gammaCorrection)
-			{
-				pixelColor = Math::linearToGamma2(pixelColor);
+				pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
+				m_framebuffer.setPixel(x, y, pixelColor * 255);
 			}
-
-			m_framebuffer.setPixel(x, y, pixelColor * 255);
 		}
 	}
+	
 }
 
 void Sandbox::render()
@@ -163,11 +184,16 @@ void Sandbox::render()
 void Sandbox::gui(int fps)
 {
 	ImGui::Begin("Settings");
-		ImGui::Text("FPS                 : %i", fps);
-		ImGui::Text("Last rendering time : %f ms", m_renderingTime);
+		ImGui::Text("FPS                       : %i", fps);
+		ImGui::Text("Last rendering time       : %f ms", m_renderingTime);
+		ImGui::Text("Path tracing sample count : %i", m_framebuffer.sampleCount);
 
 		//Graphics settings
 		ImGui::SeparatorText("Graphics");
+		if (ImGui::Checkbox("Patch tracing", &Settings::pathTracing))
+		{
+			m_framebuffer.reset();
+		}
 		ImGui::Checkbox("Continious rendering", &Settings::continiousRendering);
 		if (!Settings::continiousRendering)
 		{

@@ -19,7 +19,7 @@ public:
     static       int        bounceLimit;
     static       float      minT;
     static       bool       gammaCorrection;
-
+    static       bool       pathTracing;
 
 private:
     Settings();

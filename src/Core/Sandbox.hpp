@@ -42,10 +42,9 @@ private :
 
 	Viewport    m_viewport;
 	FrameBuffer m_framebuffer;
-	
+
 	std::vector<Hittable*> m_world;
 
-	/*
 	Lambertian	m_mGround;
 	Lambertian	m_mBlueOne;
 	Metal		m_mMirror;
@@ -59,7 +58,7 @@ private :
 	Sphere m_airBubble;
 	Sphere m_hollowOut;
 	Sphere m_hollowIn;
-	*/
+	
 
 	//Settings
 	glm::ivec2 m_showResolution;

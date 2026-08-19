@@ -10,5 +10,5 @@ class Color
 public :
     static std::uint32_t convert(std::uint8_t r, std::uint8_t g, std::uint8_t b);
     static std::uint32_t convert(const glm::vec3& color);
-    static SDL_Color convert(std::uint32_t colorARGB);
+    static glm::vec3 convert(std::uint32_t colorARGB);
 };

@@ -57,6 +57,7 @@ void Application::run()
 		sandbox.gui(m_renderedFPS);
 		ImGui::Render();
 		ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), p_renderer);
+			
 
 		SDL_RenderPresent(p_renderer);
 	}
