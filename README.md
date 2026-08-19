@@ -9,8 +9,8 @@ Physically based path tracer running on CPU, made with
 - premake5 vs2026
 ```
 
-<img href="https://github.com/KendySong/pb-pathtracer/tree/main/screenshots/final-max.png"></img>
-<img href="https://github.com/KendySong/pb-pathtracer/tree/main/screenshots/glass.png"></img>
+<img src="https://github.com/KendySong/pb-pathtracer/tree/main/screenshots/final-max.png"></img>
+<img src="https://github.com/KendySong/pb-pathtracer/tree/main/screenshots/glass.png"></img>
 
 ## Path tracer design
 - normal points always against the ray
