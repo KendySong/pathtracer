@@ -6,7 +6,7 @@ Application::Application()
 	m_renderedFPS = 0;
 
 	SDL_Init(SDL_INIT_VIDEO);
-	p_window = SDL_CreateWindow("Physically based path tracer", Settings::screen.x, Settings::screen.y, SDL_WINDOW_RESIZABLE);
+	p_window = SDL_CreateWindow("Path tracer", Settings::screen.x, Settings::screen.y, SDL_WINDOW_RESIZABLE);
 	p_renderer = SDL_CreateRenderer(p_window, nullptr);
 
 	IMGUI_CHECKVERSION();

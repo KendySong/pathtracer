@@ -1,10 +1,10 @@
-workspace "pb-pathtracer"
+workspace "pathtracer"
     architecture "x64"
     location "build"
     configurations { "Release", "Debug" }  
-    startproject "pb-pathtracer"
+    startproject "pathtracer"
 
-project "pb-pathtracer"
+project "pathtracer"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
