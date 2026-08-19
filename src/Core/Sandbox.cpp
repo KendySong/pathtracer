@@ -79,11 +79,10 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	
 	m_world.push_back(sphere11);
 	*/
-
+	
 	m_viewport.position = { 0, 0,  0.29 };
 	m_viewport.lookAt = { 0, 0, -1 };
 	m_viewport.reset();
-
 
 	//Materials and world
 	m_mGround = Lambertian({ 0.8, 0.8, 0.0 });
@@ -125,29 +124,26 @@ void Sandbox::draw()
 	if (Settings::pathTracing)
 	{
 		m_framebuffer.sampleCount++;
-		for (size_t y = 0; y < Settings::iResolution.y; y++)
+	}
+
+	for (size_t y = 0; y < Settings::iResolution.y; y++)
+	{
+		for (size_t x = 0; x < Settings::iResolution.x; x++)
 		{
-			for (size_t x = 0; x < Settings::iResolution.x; x++)
+			if (Settings::pathTracing)
 			{
 				//Compute pixel color between [0;1] foreach components
 				Ray ray = m_viewport.generateAA(x, y);
 				glm::vec3 sample = Raytracer::trace(ray, m_world, 0);
 				m_framebuffer.addAccumulation(x, y, sample);
 
-				glm::vec3 pixelColor = m_framebuffer.getAccumulation(x, y) / (float)m_framebuffer.sampleCount;	
+				glm::vec3 pixelColor = m_framebuffer.getAccumulation(x, y) / (float)m_framebuffer.sampleCount;
 				pixelColor = Math::clamp(pixelColor, 0, 1);
 				pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
 
 				m_framebuffer.setPixel(x, y, pixelColor * 255);
 			}
-		}	
-		
-	}
-	else
-	{
-		for (size_t y = 0; y < Settings::iResolution.y; y++)
-		{
-			for (size_t x = 0; x < Settings::iResolution.x; x++)
+			else
 			{
 				//Compute pixel color between [0;1] foreach components
 				glm::vec3 pixelColor = glm::vec3(0);
@@ -171,8 +167,7 @@ void Sandbox::draw()
 				m_framebuffer.setPixel(x, y, pixelColor * 255);
 			}
 		}
-	}
-	
+	}	
 }
 
 void Sandbox::render()
