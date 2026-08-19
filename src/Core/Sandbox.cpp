@@ -10,13 +10,14 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_renderingTime = 0;
 	
 	//Resolution and viewport
-	this->m_resolutionIndex = 4;
+	this->m_resolutionIndex = 5;
 	Settings::iResolution	= Resolution::getFromIndex(m_resolutionIndex);
 	Settings::resolution	= Settings::iResolution;
 	this->m_showResolution	= Settings::iResolution;
 	this->updateResolution();
 
-	m_viewport.position = { 0, 0, 1 };
+	m_viewport.position = { 0, 0,  0.29 };
+	m_viewport.lookAt   = { 0, 0, -1 };
 	m_viewport.reset();
 	
 	//Materials and world
@@ -171,7 +172,12 @@ void Sandbox::gui(int fps)
 			m_viewport.reset();
 		}
 
-		if (ImGui::DragFloat3("Origin", &m_viewport.position.x, 0.01))
+		if (ImGui::DragFloat3("Position", &m_viewport.position.x, 0.01))
+		{
+			m_viewport.reset();
+		}
+
+		if (ImGui::DragFloat3("Look at", &m_viewport.lookAt.x, 0.01))
 		{
 			m_viewport.reset();
 		}
