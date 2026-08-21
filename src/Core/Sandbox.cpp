@@ -192,6 +192,7 @@ void Sandbox::gui(int fps)
 		ImGui::Checkbox("Continious rendering", &Settings::continiousRendering);
 		if (!Settings::continiousRendering)
 		{
+			ImGui::SameLine();
 			if (ImGui::Button("Render scene"))
 			{
 				m_renderingTimer.start();
@@ -227,7 +228,7 @@ void Sandbox::gui(int fps)
 		ImGui::DragFloat("Minimum t",			&Settings::minT, 0.01, 0, 1);	
 		ImGui::SetNextItemWidth(100);
 
-		if (ImGui::BeginCombo("Resolutions", Resolution::format[m_resolutionIndex]))
+		if (ImGui::BeginCombo("Resolution", Resolution::format[m_resolutionIndex]))
 		{
 			for (size_t i = 0; i < Resolution::size; i++)
 			{
