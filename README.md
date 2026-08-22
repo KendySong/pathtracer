@@ -10,8 +10,9 @@ Physically based path tracer running on CPU with multi-threading, made with
 ```
 
 <img src="https://raw.githubusercontent.com/KendySong/pb-pathtracer/main/screenshots/animation.gif"></img>
-<img src="https://raw.githubusercontent.com/KendySong/pb-pathtracer/main/screenshots/final-max.png"></img>
 <img src="https://raw.githubusercontent.com/KendySong/pb-pathtracer/main/screenshots/glass.png"></img>
+<img src="https://raw.githubusercontent.com/KendySong/pb-pathtracer/main/screenshots/final-max.png"></img>
+
 
 ## Path tracer design
 - normal points always against the ray
