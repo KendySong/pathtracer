@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <algorithm>
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
@@ -11,6 +12,8 @@
 #include <glm/glm.hpp>
 
 #include "Timer.hpp"
+#include "../Core/ThreadPool.hpp"
+
 #include "../Settings.hpp"
 #include "../Graphics/Color.hpp"
 #include "../Graphics/Framebuffer.hpp"
@@ -27,7 +30,7 @@ class Sandbox
 {
 public :
 	Sandbox(SDL_Window* window, SDL_Renderer* renderer);
-	
+
 	void clear();
 	void update(float dt);
 	void draw();
@@ -38,6 +41,9 @@ public :
 	SDL_Renderer* renderer;
 
 private :
+	void computePixel(int x, int y);
+	void computeZone(glm::ivec2 start, glm::ivec2 end);
+
 	void updateResolution();
 
 	Viewport    m_viewport;
@@ -59,7 +65,6 @@ private :
 	Sphere m_hollowOut;
 	Sphere m_hollowIn;
 	
-
 	//Settings
 	glm::ivec2 m_showResolution;
 	Timer m_renderingTimer;
@@ -67,4 +72,6 @@ private :
 
 	int   m_resolutionIndex;
 	int   m_sampleIndex;
+
+	ThreadPool m_threadpool;
 };

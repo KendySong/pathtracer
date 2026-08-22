@@ -126,48 +126,77 @@ void Sandbox::draw()
 		m_framebuffer.sampleCount++;
 	}
 
-	for (size_t y = 0; y < Settings::iResolution.y; y++)
+	if (Settings::multiThreading)
 	{
-		for (size_t x = 0; x < Settings::iResolution.x; x++)
+		for (size_t y = 0; y < Settings::iResolution.y; y += Settings::tileSize.y)
 		{
-			if (Settings::pathTracing)
+			for (size_t x = 0; x < Settings::iResolution.x; x += Settings::tileSize.x)
 			{
-				//Compute pixel color between [0;1] foreach components
-				Ray ray = m_viewport.generateAA(x, y);
-				glm::vec3 sample = Raytracer::trace(ray, m_world, 0);
-				m_framebuffer.addAccumulation(x, y, sample);
-
-				glm::vec3 pixelColor = m_framebuffer.getAccumulation(x, y) / (float)m_framebuffer.sampleCount;
-				pixelColor = Math::clamp(pixelColor, 0, 1);
-				pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
-
-				m_framebuffer.setPixel(x, y, pixelColor * 255);
-			}
-			else
-			{
-				//Compute pixel color between [0;1] foreach components
-				glm::vec3 pixelColor = glm::vec3(0);
-				if (Settings::antialiasing)
-				{
-					for (size_t i = 0; i < Settings::sampleAA; i++)
-					{
-						Ray ray = m_viewport.generateAA(x, y);
-						pixelColor += Raytracer::trace(ray, m_world, 0);
-					}
-
-					pixelColor = (pixelColor / Settings::sampleAA);
-				}
-				else
-				{
-					Ray ray = m_viewport.generate(x, y);
-					pixelColor = Raytracer::trace(ray, m_world, 0);
-				}
-
-				pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
-				m_framebuffer.setPixel(x, y, pixelColor * 255);
+				m_threadpool.enqueue([=, this]() -> void {
+					glm::ivec2 nextCoord = { x + Settings::tileSize.x, y + Settings::tileSize.y };
+					nextCoord.x = glm::clamp(nextCoord.x, 0, Settings::iResolution.x);
+					nextCoord.y = glm::clamp(nextCoord.y, 0, Settings::iResolution.y);
+					computeZone({ x, y }, nextCoord);
+				});
 			}
 		}
+		m_threadpool.finish();
+	}
+	else
+	{
+		computeZone({ 0, 0 }, { Settings::iResolution.x, Settings::iResolution.y });
 	}	
+}
+
+void Sandbox::computePixel(int x, int y)
+{
+	if (Settings::pathTracing)
+	{
+		//Compute pixel color between [0;1] foreach components
+		Ray ray = m_viewport.generateAA(x, y);
+		glm::vec3 sample = Raytracer::trace(ray, m_world, 0);
+		m_framebuffer.addAccumulation(x, y, sample);
+
+		glm::vec3 pixelColor = m_framebuffer.getAccumulation(x, y) / (float)m_framebuffer.sampleCount;
+		pixelColor = Math::clamp(pixelColor, 0, 1);
+		pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
+
+		m_framebuffer.setPixel(x, y, pixelColor * 255);
+	}
+	else
+	{
+		//Compute pixel color between [0;1] foreach components
+		glm::vec3 pixelColor = glm::vec3(0);
+		if (Settings::antialiasing)
+		{
+			for (size_t i = 0; i < Settings::sampleAA; i++)
+			{
+				Ray ray = m_viewport.generateAA(x, y);
+				pixelColor += Raytracer::trace(ray, m_world, 0);
+			}
+
+			pixelColor = (pixelColor / Settings::sampleAA);
+		}
+		else
+		{
+			Ray ray = m_viewport.generate(x, y);
+			pixelColor = Raytracer::trace(ray, m_world, 0);
+		}
+
+		pixelColor = Settings::gammaCorrection ? Math::linearToGamma2(pixelColor) : pixelColor;
+		m_framebuffer.setPixel(x, y, pixelColor * 255);
+	}
+}
+
+void Sandbox::computeZone(glm::ivec2 start, glm::ivec2 end)
+{
+	for (size_t y = start.y; y < end.y; y++)
+	{
+		for (size_t x = start.x; x < end.x; x++)
+		{
+			this->computePixel(x, y);
+		}
+	}
 }
 
 void Sandbox::render()
@@ -182,6 +211,7 @@ void Sandbox::gui(int fps)
 		ImGui::Text("FPS                       : %i", fps);
 		ImGui::Text("Last rendering time       : %f ms", m_renderingTime);
 		ImGui::Text("Path tracing sample count : %i", m_framebuffer.sampleCount);
+		ImGui::Text("Number of working threads : %i", m_threadpool.nbThread);
 
 		//Graphics settings
 		ImGui::SeparatorText("Graphics");
@@ -203,7 +233,7 @@ void Sandbox::gui(int fps)
 		}
 		ImGui::Checkbox( "Gamma correction",	&Settings::gammaCorrection);
 		ImGui::Checkbox( "Antialiasing",		&Settings::antialiasing);
-
+		ImGui::Checkbox( "Multi threading",		&Settings::multiThreading);
 
 		if (ImGui::BeginCombo("Sample per pixel", Sample::quantity[m_sampleIndex]))
 		{

@@ -20,6 +20,8 @@ public:
     static       float      minT;
     static       bool       gammaCorrection;
     static       bool       pathTracing;
+    static const glm::ivec2 tileSize;
+    static       bool       multiThreading;
 
 private:
     Settings();

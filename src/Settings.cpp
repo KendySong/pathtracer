@@ -19,3 +19,5 @@ int					Settings::bounceLimit			= 10;
 float				Settings::minT					= 0.01;
 bool				Settings::gammaCorrection		= false;
 bool				Settings::pathTracing			= false;
+const glm::ivec2	Settings::tileSize				= glm::ivec2(32, 32);
+bool				Settings::multiThreading		= false;
