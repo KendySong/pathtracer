@@ -16,8 +16,6 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	this->m_showResolution	= Settings::iResolution;
 	this->updateResolution();
 
-
-	/*
 	m_viewport.position = { 13, 2,  3 };
 	m_viewport.lookAt = { 0, 0, 0 };
 	m_viewport.fov = 20;
@@ -27,9 +25,9 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	Sphere* ground = new Sphere({ 0, -1000, 0 }, 1000, groundm);
 	m_world.push_back(ground);
 
-	for (int a = -5; a < 5; a++)
+	for (int a = -11; a < 11; a++)
 	{
-		for (int b = -5; b < 5; b++)
+		for (int b = -11; b < 11; b++)
 		{
 			float chooseMat = Math::random();
 			glm::vec3 center(a + 0.9 * Math::random(), 0.2, b + 0.9 * Math::random());
@@ -78,8 +76,8 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_world.push_back(sphere13);
 	
 	m_world.push_back(sphere11);
-	*/
 	
+	/*
 	m_viewport.position = { 0, 0,  0.29 };
 	m_viewport.lookAt = { 0, 0, -1 };
 	m_viewport.reset();
@@ -105,6 +103,7 @@ Sandbox::Sandbox(SDL_Window* window, SDL_Renderer* renderer) : m_framebuffer(ren
 	m_world.push_back(&m_airBubble);
 	m_world.push_back(&m_hollowOut);
 	m_world.push_back(&m_hollowIn);
+	*/
 }
 
 void Sandbox::clear() 
